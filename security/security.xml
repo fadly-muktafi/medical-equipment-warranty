@@ -1,1 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
+<odoo>
+
+    <record id="module_category_warranty" model="ir.module.category">
+        <field name="name">Garansi Medis</field>
+        <field name="name"></field>
+        <field name="name"></field>
+    </record>
+
+</odoo>
