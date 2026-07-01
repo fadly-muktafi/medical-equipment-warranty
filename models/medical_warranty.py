@@ -1,4 +1,4 @@
-from odoo import fields, models, api
+from odoo import fields, models, api, _
 from odoo.exception import ValidationError
 from dateutil.relativedelta import relativedelta
 
@@ -7,6 +7,11 @@ class Medicalarranty(models.Model):
     _description = 'Garansi Alat Kesehatan'
     _order = 'date_end asc, id desc'
     _rec_name = 'name'
+    _sql_constraints = [(
+        'duration_months_positive',
+        'CHECK(duration_months > 0)',
+        'Durasi garansi harus lebih besar dari 0 bulan'
+    )]
 
     name = fields.Char(string='Nomor Garansi', required=True, copy=False, readonly=True, default=lambda self: _('New'))
     active = fields.Boolean(default=True)
