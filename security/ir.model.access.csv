@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_create,perm_read,perm_write,perm_unlink
+access_medical_warranty_user,medical.warranty.user,model_medical_warranty,group_warranty_user,1,1,1,0
+access_medical_warranty_manager,medical.warranty.manager,model_medical_warranty,group_warranty_manager1,1,1,1,1
+access_medical_warranty_claim_user,medical.warranty.claim.user,model_medical_warranty_claim,group_warranty_user,1,1,1,0
+access_medical_warranty_claim_manager,medical.warranty.claim.manager,model_medical_warranty_claim,group_warranty_manager1,1,1,1,1
