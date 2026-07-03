@@ -49,3 +49,47 @@ class Medicalarranty(models.Model):
     claim_ids = fields.One2many('medical.warranty.claim', 'warranty_id', string='Klaim Garansi')
     claim_count = fields.Integer(string='Jumlah Klaim', compute='_compute_claim_count')
     notes = fields.Text(string='Catatan')
+
+    @api.depends('date_start', 'duration_months')
+    def _compute_date_end(self):
+        for rec in self:
+            if rec.date_start and rec.duration_months:
+                rec.date_end = rec.date_start + relativedelta(months=rec.duration_months)
+            else:
+                rec.date_end = False
+    
+    def _compute_days_remaining(self):
+        today = fields.Date.context_today(self)
+        for rec in self:
+            if rec.date_end:
+                rec.days_remaining = (rec.date_end - today).days
+            else:
+                rec.date_remaining = 0
+
+    def _compute_claim_count(self):
+        for rec in self:
+            rec.claim_count = len(rec.claim_ids)
+
+    @api.constrains('duration_months')
+    def _check_duration_months(self):
+        for rec in self:
+            if rec.duration_months <= 0:
+                raise ValidationError(_('Durasi garansi harus lebih besar dari 0 bulan.'))
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if vals.get('name', _('New') == _('New')):
+                vals['name'] = self.env['ir.sequence'].next_by_code('medical.warranty') or _('New')
+            vals.setdefault('state', 'active')
+        return super().create(vals_list)
+
+    def action_active(self):
+        self.write({'state': 'active'})
+
+    def action_cancel(self):
+        self.write({'state': 'cancelled'})
+
+    def action_reset_to_draft(self):
+        self.write({'state': 'draft'})
+        
