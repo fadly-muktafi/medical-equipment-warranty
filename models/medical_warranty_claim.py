@@ -21,3 +21,21 @@ class MedicalWarrantyClaim(models.Model):
         ('resolved', 'Selesai'),
     ], string='Status', default='new', tracking=True, copy=False)
     
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if vals.get('name', _('New')) == _('New'):
+                vals['name'] = self.env['ir.sequence'].next_by_code('medical.warranty.claim') or _('New')
+            return super().create(vals_list)
+
+    def action_set_progress(self):
+        self.write({'state': 'progress'})
+
+    def action_set_rejected(self):
+        self.write({'state': 'rejected'})
+
+    def action_set_resolved(self):
+        self.write({'state': 'resolved'})
+
+    def action_reset_new(self):
+        self.write({'state': 'new'})
