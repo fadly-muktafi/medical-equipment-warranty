@@ -16,6 +16,7 @@ class ProductTemplate(models.Model):
 
     warranty_duration = fields.Integer(string='Durasi Garansi (Bulan)', default=12)
     requires_serial = fields.Boolean(string='Wajib Nomor Seri')
+    
     bpom_number = fields.Char(string='Nomor Izin Edar BPOM')
     kemenkes_certif = fields.Char(string='Nomor Sertifikasi Kemenkes')
     certif_expiry_date = fields.Date(string='Tanggal Kadaluwarsa Sertifikasi')
