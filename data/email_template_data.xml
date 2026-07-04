@@ -1,7 +1,63 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 
-<odoo>
+<odoo noupdate="1">
 
-    
+    <record id="email_template_warranty_expiry_30" model="mail.template">
+        <field name="name">Garansi: Pengingat 30 Hari Sebelum Berakhir</field>
+        <field name="model_id" ref="model_medical_warranty"/>
+        <field name="subject">Pengingat: Garansi {{ object.product_id.name }} akan berakhir dalam 30 hari</field>
+        <field name="partner_to">{{ object.partner_id.id }}</field>
+        <field name="auto_delete" eval="False"/>
+        <field name="body_html" type="html">
+            <div style="font-family: Arial, sans-serif; font-size: 14px; color: #333333; line-height: 1.6;">
+                <p>Halo <t t-out="object.partner_id.name or ''"/>,</p>
+                <p>
+                    Kami informasikan bahwa garansi produk
+                    <strong t-out="object.product_id.name or ''"/>
+                    (No. Garansi <t t-out="object.name or ''"/>)
+                    akan berakhir pada tanggal
+                    <strong t-out="format_date(object.date_end)"/>.
+                </p>
+                <p>
+                    Apabila Anda mengalami kendala dengan produk ini, silakan
+                    ajukan klaim garansi sebelum tanggal tersebut melalui Toko
+                    Alat Kesehatan terdekat atau hubungi kami melalui WhatsApp.
+                </p>
+                <p>Terima kasih telah berbelanja di Toko Alat Kesehatan.</p>
+                <p style="color: #888888; font-size: 12px;">
+                    Email ini dikirim otomatis oleh sistem Toko Alat Kesehatan.
+                </p>
+            </div>
+        </field>
+    </record>
+
+    <record id="mail_template_warranty_expiry_7" model="mail.template">
+        <field name="name">Garansi: Pengingat 7 Hari Sebelum Berakhir</field>
+        <field name="model_id" ref="model_medical_warranty"/>
+        <field name="subject">Segera berakhir: Garansi {{ object.product_id.name }} dalam 7 hari</field>
+        <field name="partner_to">{{ object.partner_id.id }}</field>
+        <field name="auto_delete" eval="False"/>
+        <field name="body_html" type="html">
+            <div style="font-family: Arial, sans-serif; font-size: 14px; color: #333333; line-height: 1.6;">
+                <p>Halo <t t-out="object.partner_id.name or ''"/>,</p>
+                <p>
+                    Garansi produk
+                    <strong t-out="object.product_id.name or ''"/>
+                    (No. Garansi <t t-out="object.name or ''"/>)
+                    akan berakhir
+                    <strong>7 hari lagi</strong>, pada tanggal
+                    <strong t-out="format_date(object.date_end)"/>.
+                </p>
+                <p>
+                    Ini adalah kesempatan terakhir untuk mengajukan klaim
+                    garansi jika produk Anda mengalami kendala.
+                </p>
+                <p>Terima kasih telah berbelanja di Toko Alat Kesehatan.</p>
+                <p style="color: #888888; font-size: 12px;">
+                    Email ini dikirim otomatis oleh sistem Toko Alat Kesehatan.
+                </p>
+            </div>
+        </field>
+    </record>
 
 </odoo>
