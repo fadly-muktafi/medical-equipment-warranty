@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+
+    <menuitem id="menu_medical_warranty_root"
+              name="Garansi Medis"
+              sequence="60"
+              groups="medical_equipment_warranty.group_warranty_user"/>
+
+    <menuitem id="menu_medical_warranty"
+              name="Garansi"
+              parent="menu_medical_warranty_root"
+              action="action_medical_warranty"
+              sequence="10"/>
+
+    <menuitem id="menu_medical_warranty_claim"
+              name="Klaim Garansi"
+              parent="menu_medical_warranty_root"
+              action="action_medical_warranty_claim"
+              sequence="20"/>
+
+</odoo>
