@@ -1,1 +1,36 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+
+    <record id="view_product_template_form_medical" model="ir.ui.view">
+        <field name="name">product.template.form.medical.inherit</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="Info Medis" name="medical_info">
+                    <field name="certif_expired" invisible="1"/>
+                    <group>
+                        <group string="Klasifikasi">
+                            <field name="is_medical_device"/>
+                            <field name="medical_category" invisible="not is_medical_device"/>
+                            <field name="requires_serial" invisible="not is_medical_device"/>
+                            <field name="warranty_duration" invisible="not is_medical_device"/>
+                        </group>
+                        <group string="Sertifikasi &amp; Izin Edar" invisible="not is_medical_device">
+                            <field name="bpom_number"/>
+                            <field name="kemenkes_cert"/>
+                            <field name="cert_expiry_date"/>
+                        </group>
+                    </group>
+                    <div class="alert alert-danger" role="alert"
+                         invisible="not is_medical_device or not certif_expired">
+                        <strong>Perhatian:</strong> sertifikat produk ini sudah kedaluwarsa.
+                        Segera perbarui izin edar BPOM/Kemenkes sebelum dijual kembali.
+                    </div>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
