@@ -97,3 +97,54 @@ class Medicalarranty(models.Model):
     def action_reset_to_draft(self):
         self.write({'state': 'draft'})
         
+    def action_view_claims(self):
+        self.ensure_one()
+        action = self.env['ir.actions.actions']._for_xml_id('medical_equipment_warranty.action_medical_warranty_claim')
+        action['domain'] = [('warranty_id', '=', self.id)]
+        action['context'] = {
+            'default_warranty_id': self.id,
+            'default_partner_id': self.partner_id.id,
+            'default_product_id': self.product_id.id,
+        }
+        return action
+
+    def action_print_warranty_card(self):
+        return self.env.ref('medical_equipment_warranty.action_report_medical_warranty_card').report_action(self)
+
+    def _cron_check_expiry(self):
+        today = fields.Date.context_today(self)
+        expired = self.search([
+            ('state', 'in', ('active', 'expiring')),
+            ('date_end', '<', today),
+        ])
+        expired.write({'state': 'expired'})
+        expiring_soon = self.search([
+            ('state', '=', 'active'),
+            ('date_end', '>=', today),
+            ('date_end', '<=', today + relativedelta(days=30)),
+        ])
+        expiring_soon.write({'state': 'expiring'})
+
+        template_30 = self.env.ref('medical_equipment_warranty.email_template_warranty_expiring_30_days', raise_if_not_found=False)
+        if template_30:
+            to_notify_30 = self.search([
+                ('state', '=', 'expiring'),
+                ('notify_30_sent', '=', False),
+                ('date_end', '<=', today + relativedelta(days=30)),
+            ])
+            for rec in to_notify_30:
+                template_30.send_mail(rec.id, force_send=True)
+            to_notify_30.write({'notify_30_sent': True})
+
+        template_7 = self.env.ref('medical_equipment_warranty.email_template_warranty_expiring_7_days', raise_if_not_found=False)
+        if template_7:
+            to_notify_7 = self.search([
+                ('state', '=', 'expiring'),
+                ('notify_7_sent', '=', False),
+                ('date_end', '<=', today + relativedelta(days=7)),
+            ])
+            for rec in to_notify_7:
+                template_7.send_mail(rec.id, force_send=True)
+            to_notify_7.write({'notify_7_sent': True})
+
+        return True
