@@ -1,1 +1,115 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+
+    <record id="view_medical_warranty_claim_list" model="ir.ui.view">
+        <field name="name">medical.warranty.claim.list</field>
+        <field name="model">medical.warranty.claim</field>
+        <field name="arch" type="xml">
+            <list string="Klaim Garansi"
+                  decoration-info="state == 'new'"
+                  decoration-warning="state == 'progress'"
+                  decoration-muted="state == 'rejected'">
+                <field name="name"/>
+                <field name="claim_date"/>
+                <field name="product_id"/>
+                <field name="partner_id"/>
+                <field name="description"/>
+                <field name="state" widget="badge"
+                       decoration-info="state == 'new'"
+                       decoration-warning="state == 'progress'"
+                       decoration-success="state == 'resolved'"
+                       decoration-danger="state == 'rejected'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_medical_warranty_claim_form" model="ir.ui.view">
+        <field name="name">medical.warranty.claim.form</field>
+        <field name="model">medical.warranty.claim</field>
+        <field name="arch" type="xml">
+            <form string="Klaim Garansi">
+                <header>
+                    <button name="action_set_in_progress" type="object"
+                            string="Proses Klaim" class="btn-primary"
+                            invisible="state != 'new'"/>
+                    <button name="action_set_resolved" type="object"
+                            string="Selesaikan" class="btn-primary"
+                            invisible="state != 'progress'"/>
+                    <button name="action_set_rejected" type="object"
+                            string="Tolak Klaim"
+                            invisible="state in ('resolved', 'rejected')"
+                            confirm="Yakin ingin menolak klaim ini?"/>
+                    <button name="action_reset_new" type="object"
+                            string="Kembalikan ke Baru"
+                            invisible="state == 'new'"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="new,progress,resolved"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" string="Nomor Klaim"/>
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="warranty_id"/>
+                            <field name="product_id" readonly="1"/>
+                            <field name="partner_id" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="claim_date"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+                    <group string="Deskripsi Kendala">
+                        <field name="description" nolabel="1"/>
+                    </group>
+                    <group string="Resolusi" invisible="not resolution and state not in ('progress','resolved','rejected')">
+                        <field name="resolution" nolabel="1"/>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_medical_warranty_claim_search" model="ir.ui.view">
+        <field name="name">medical.warranty.claim.search</field>
+        <field name="model">medical.warranty.claim</field>
+        <field name="arch" type="xml">
+            <search string="Cari Klaim">
+                <field name="name"/>
+                <field name="product_id"/>
+                <field name="partner_id"/>
+                <field name="warranty_id"/>
+                <filter string="Baru" name="filter_new" domain="[('state', '=', 'new')]"/>
+                <filter string="Diproses" name="filter_progress" domain="[('state', '=', 'progress')]"/>
+                <filter string="Selesai" name="filter_resolved" domain="[('state', '=', 'resolved')]"/>
+                <filter string="Ditolak" name="filter_rejected" domain="[('state', '=', 'rejected')]"/>
+                <group expand="0" string="Kelompokkan">
+                    <filter string="Status" name="group_state" context="{'group_by': 'state'}"/>
+                    <filter string="Produk" name="group_product" context="{'group_by': 'product_id'}"/>
+                    <filter string="Pelanggan" name="group_partner" context="{'group_by': 'partner_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_medical_warranty_claim" model="ir.actions.act_window">
+        <field name="name">Klaim Garansi</field>
+        <field name="res_model">medical.warranty.claim</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_medical_warranty_claim_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Belum ada klaim garansi
+            </p>
+            <p>
+                Klaim dapat diajukan dari form Garansi Alat Kesehatan,
+                atau dibuat langsung di sini.
+            </p>
+        </field>
+    </record>
+
+</odoo>
