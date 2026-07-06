@@ -1,10 +1,11 @@
 from odoo import fields, models, api, _
-from odoo.exception import ValidationError
+from odoo.exceptions import ValidationError
 from dateutil.relativedelta import relativedelta
 
 class Medicalarranty(models.Model):
     _name = 'medical.warranty'
     _description = 'Garansi Alat Kesehatan'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = 'date_end asc, id desc'
     _rec_name = 'name'
     _sql_constraints = [(
@@ -15,19 +16,19 @@ class Medicalarranty(models.Model):
 
     name = fields.Char(string='Nomor Garansi', required=True, copy=False, readonly=True, default=lambda self: _('New'))
     active = fields.Boolean(default=True)
-    company_id = fields.Many2one('res_company', string='Perusahaan', required=True, default=lambda self: self.env.company)
+    company_id = fields.Many2one('res.company', string='Perusahaan', required=True, default=lambda self: self.env.company)
 
     product_id = fields.Many2one(
         'product.product', string='Produk', required=True, tracking=True, domain="[('is_medical_device','=',True)]"
     )
-    product_requires_serial = fields.Boolean(related='product_id.product_template_id.requires_serial', string='Wajib Nomor Seri')
+    product_requires_serial = fields.Boolean(related='product_id.product_tmpl_id.requires_serial', string='Wajib Nomor Seri')
     lot_id = fields.Many2one('stock.lot', string='Nomor Seri / Lot', domain="[('product_id','=',product_id)]")
 
     sale_order_id = fields.Many2one('sale.order', string='Sales Order', ondelete='cascade', tracking=True)
     sale_order_line_id = fields.Many2one('sale.order.line', string='Pelanggan', required=True, tracking=True)
     partner_id = fields.Many2one('res.partner', string='Pelanggan', required=True, tracking=True)
 
-    date_start = fields.Date(string='Tanggal Mulai', required=True, default=fiels.Date.context_today)
+    date_start = fields.Date(string='Tanggal Mulai', required=True, default=fields.Date.context_today)
     duration_months = fields.Integer(string='Durasi (Bulan)', required=True, default=12)
     date_end = fields.Date(string='Tanggal Berakhir', compute='_compute_date_end', store=True)
     days_remaining = fields.Integer(string='Sisa Hari', compute='_compute_days_remaining')
@@ -50,7 +51,7 @@ class Medicalarranty(models.Model):
     notify_7_sent = fields.Boolean(string='Notifikasi 7 Hari Terkirim', copy=False)
 
     claim_ids = fields.One2many('medical.warranty.claim', 'warranty_id', string='Klaim Garansi')
-    claim_count = fields.Integer(string='Jumlah Klaim', compute='_compute_claim_count')
+    claim_count = fields.Integer(string='Jumlah Klaim', compute='_compute_claim_count', store=True)
     
     notes = fields.Text(string='Catatan')
 
@@ -70,6 +71,7 @@ class Medicalarranty(models.Model):
             else:
                 rec.date_remaining = 0
 
+    @api.depends('claim_ids')
     def _compute_claim_count(self):
         for rec in self:
             rec.claim_count = len(rec.claim_ids)

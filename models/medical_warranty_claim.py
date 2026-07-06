@@ -15,7 +15,7 @@ class MedicalWarrantyClaim(models.Model):
     
     claim_date = fields.Date(string='Tanggal Klaim', required=True, default=fields.Date.context_today)
     description = fields.Text(string='Deskripsi Masalah', required=True)
-    resolution = fieldss.Text(string='Resolusi / Tindak Lanjut')
+    resolution = fields.Text(string='Resolusi / Tindak Lanjut')
     
     state = fields.Selection([
         ('new', 'Baru'),

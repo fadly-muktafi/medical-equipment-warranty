@@ -36,7 +36,7 @@
         <field name="arch" type="xml">
             <form string="Garansi Alat Kesehatan">
                 <header>
-                    <button name="action_activate" type="object" string="Aktifkan"
+                    <button name="action_active" type="object" string="Aktifkan"
                             class="btn-primary" invisible="state != 'draft'"/>
                     <button name="action_print_warranty_card" type="object"
                             string="Cetak Kartu Garansi" class="btn-primary"
