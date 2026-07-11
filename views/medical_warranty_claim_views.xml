@@ -30,7 +30,7 @@
         <field name="arch" type="xml">
             <form string="Klaim Garansi">
                 <header>
-                    <button name="action_set_in_progress" type="object"
+                    <button name="action_set_progress" type="object"
                             string="Proses Klaim" class="btn-primary"
                             invisible="state != 'new'"/>
                     <button name="action_set_resolved" type="object"
