@@ -2,7 +2,7 @@ from odoo import fields, models, api, _
 from odoo.exceptions import ValidationError
 from dateutil.relativedelta import relativedelta
 
-class Medicalarranty(models.Model):
+class MedicalWarranty(models.Model):
     _name = 'medical.warranty'
     _description = 'Garansi Alat Kesehatan'
     _inherit = ['mail.thread', 'mail.activity.mixin']
@@ -25,7 +25,7 @@ class Medicalarranty(models.Model):
     lot_id = fields.Many2one('stock.lot', string='Nomor Seri / Lot', domain="[('product_id','=',product_id)]")
 
     sale_order_id = fields.Many2one('sale.order', string='Sales Order', ondelete='cascade', tracking=True)
-    sale_order_line_id = fields.Many2one('sale.order.line', string='Pelanggan', required=True, tracking=True)
+    sale_order_line_id = fields.Many2one('sale.order.line', string='Baris Sales Order', tracking=True)
     partner_id = fields.Many2one('res.partner', string='Pelanggan', required=True, tracking=True)
 
     date_start = fields.Date(string='Tanggal Mulai', required=True, default=fields.Date.context_today)
@@ -63,13 +63,14 @@ class Medicalarranty(models.Model):
             else:
                 rec.date_end = False
     
+    @api.depends('date_end')
     def _compute_days_remaining(self):
         today = fields.Date.context_today(self)
         for rec in self:
             if rec.date_end:
                 rec.days_remaining = (rec.date_end - today).days
             else:
-                rec.date_remaining = 0
+                rec.days_remaining = 0
 
     @api.depends('claim_ids')
     def _compute_claim_count(self):
@@ -111,7 +112,7 @@ class Medicalarranty(models.Model):
         return action
 
     def action_print_warranty_card(self):
-        return self.env.ref('medical_equipment_warranty.action_report_medical_warranty_card').report_action(self)
+        return self.env.ref('medical_equipment_warranty.action_report_warranty_card').report_action(self)
 
     def _cron_check_expiry(self):
         today = fields.Date.context_today(self)
@@ -127,7 +128,7 @@ class Medicalarranty(models.Model):
         ])
         expiring_soon.write({'state': 'expiring'})
 
-        template_30 = self.env.ref('medical_equipment_warranty.email_template_warranty_expiring_30_days', raise_if_not_found=False)
+        template_30 = self.env.ref('medical_equipment_warranty.email_template_warranty_expires_30_days', raise_if_not_found=False)
         if template_30:
             to_notify_30 = self.search([
                 ('state', '=', 'expiring'),
@@ -138,7 +139,7 @@ class Medicalarranty(models.Model):
                 template_30.send_mail(rec.id, force_send=True)
             to_notify_30.write({'notify_30_sent': True})
 
-        template_7 = self.env.ref('medical_equipment_warranty.email_template_warranty_expiring_7_days', raise_if_not_found=False)
+        template_7 = self.env.ref('medical_equipment_warranty.email_template_warranty_expires_7_days', raise_if_not_found=False)
         if template_7:
             to_notify_7 = self.search([
                 ('state', '=', 'expiring'),

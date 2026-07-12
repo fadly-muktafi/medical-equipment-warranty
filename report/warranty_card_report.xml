@@ -6,9 +6,9 @@
         <field name="name">Warranty Card</field>
         <field name="model">medical.warranty</field>
         <field name="report_type">qweb-pdf</field>
-        <field name="report_name">report_warranty_card</field>
-        <field name="report_file">report_warranty_card</field>
-        <field name="print_report_name">'Kartu Garansi  - %s' % (object.name)</field>
+        <field name="report_name">medical_equipment_warranty.report_warranty_card</field>
+        <field name="report_file">medical_equipment_warranty.report_warranty_card</field>
+        <field name="print_report_name">'Kartu Garansi - %s' % (object.name)</field>
         <field name="binding_model_id" ref="model_medical_warranty"/>
         <field name="binding_type">report</field>
     </record>

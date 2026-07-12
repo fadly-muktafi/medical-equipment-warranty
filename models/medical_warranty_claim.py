@@ -29,7 +29,7 @@ class MedicalWarrantyClaim(models.Model):
         for vals in vals_list:
             if vals.get('name', _('New')) == _('New'):
                 vals['name'] = self.env['ir.sequence'].next_by_code('medical.warranty.claim') or _('New')
-            return super().create(vals_list)
+        return super().create(vals_list)
 
     def action_set_progress(self):
         self.write({'state': 'progress'})

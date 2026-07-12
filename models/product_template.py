@@ -10,7 +10,7 @@ class ProductTemplate(models.Model):
         ('disposable', 'Produk Disposable'),
         ('hospital_equipment', 'Peralatan Rumah Sakit'),
         ('lab_equipment', 'Alat Laboratorium'),
-        ('mobility_aid', 'Alat Bntu Mobilitas'),
+        ('mobility_aid', 'Alat Bantu Mobilitas'),
         ('other', 'Lainnya'),
     ], string='Kategori Medis')
 

@@ -19,8 +19,8 @@
                         </group>
                         <group string="Sertifikasi &amp; Izin Edar" invisible="not is_medical_device">
                             <field name="bpom_number"/>
-                            <field name="kemenkes_cert"/>
-                            <field name="cert_expiry_date"/>
+                            <field name="kemenkes_certif"/>
+                            <field name="certif_expiry_date"/>
                         </group>
                     </group>
                     <div class="alert alert-danger" role="alert"
