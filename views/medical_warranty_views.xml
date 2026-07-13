@@ -173,7 +173,7 @@
                 <filter string="Dibatalkan" name="filter_cancelled" domain="[('state', '=', 'cancelled')]"/>
                 <separator/>
                 <filter string="Punya Klaim" name="filter_has_claim" domain="[('claim_count', '&gt;', 0)]"/>
-                <group expand="0" string="Kelompokkan">
+                <group>
                     <filter string="Status" name="group_state" context="{'group_by': 'state'}"/>
                     <filter string="Produk" name="group_product" context="{'group_by': 'product_id'}"/>
                     <filter string="Pelanggan" name="group_partner" context="{'group_by': 'partner_id'}"/>

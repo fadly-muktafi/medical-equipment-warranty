@@ -87,7 +87,7 @@
                 <filter string="Diproses" name="filter_progress" domain="[('state', '=', 'progress')]"/>
                 <filter string="Selesai" name="filter_resolved" domain="[('state', '=', 'resolved')]"/>
                 <filter string="Ditolak" name="filter_rejected" domain="[('state', '=', 'rejected')]"/>
-                <group expand="0" string="Kelompokkan">
+                <group>
                     <filter string="Status" name="group_state" context="{'group_by': 'state'}"/>
                     <filter string="Produk" name="group_product" context="{'group_by': 'product_id'}"/>
                     <filter string="Pelanggan" name="group_partner" context="{'group_by': 'partner_id'}"/>

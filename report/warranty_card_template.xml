@@ -2,87 +2,90 @@
 
 <odoo>
 
-    <template id="report_warranty_card_document">
-        <t t-foreach="docs" t-as="o">
-            <div class="page" style="font-family: Arial, sans-serif;">
+    <template id="report_warranty_card">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.basic_layout">
+                    
+                    <div class="page" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #333;">
+                        <!-- Bingkai Utama -->
+                        <div style="border: 2px solid #1d9e75; border-radius: 12px; padding: 30px; margin: 20px auto; max-width: 750px; background-color: #fff;">
 
-                <div style="border: 2px solid #1d9e75; border-radius: 10px; padding: 24px;">
+                            <!-- Header -->
+                            <div class="text-center" style="margin-bottom: 25px;">
+                                <h2 style="color: #1d9e75; font-weight: bold; letter-spacing: 1px; margin-bottom: 4px;">KARTU GARANSI</h2>
+                                <div style="font-size: 14px; color: #666; font-weight: 500;">Toko Alat Kesehatan</div>
+                            </div>
 
-                    <div style="text-align: center; margin-bottom: 16px;">
-                        <h2 style="color: #1d9e75; margin-bottom: 4px;">KARTU GARANSI</h2>
-                        <div style="font-size: 12px; color: #666;">Toko Alat Kesehatan</div>
-                    </div>
-
-                    <table style="width: 100%; font-size: 13px; margin-bottom: 16px;">
-                        <tr>
-                            <td style="width: 65%; vertical-align: top;">
-                                <table style="width: 100%;">
-                                    <tr>
-                                        <td style="padding: 4px 0; color: #666; width: 40%;">Nomor Garansi</td>
-                                        <td style="padding: 4px 0;"><strong t-out="o.name"/></td>
-                                    </tr>
-                                    <tr>
-                                        <td style="padding: 4px 0; color: #666;">Produk</td>
-                                        <td style="padding: 4px 0;"><span t-out="o.product_id.display_name"/></td>
-                                    </tr>
-                                    <tr t-if="o.lot_id">
-                                        <td style="padding: 4px 0; color: #666;">Nomor Seri</td>
-                                        <td style="padding: 4px 0;"><span t-out="o.lot_id.name"/></td>
-                                    </tr>
-                                    <tr>
-                                        <td style="padding: 4px 0; color: #666;">Pelanggan</td>
-                                        <td style="padding: 4px 0;"><span t-out="o.partner_id.display_name"/></td>
-                                    </tr>
-                                    <tr>
-                                        <td style="padding: 4px 0; color: #666;">Jenis Garansi</td>
-                                        <td style="padding: 4px 0;">
+                            <!-- Konten Utama Menggunakan Grid Bootstrap (Bukan Tabel) -->
+                            <div class="row" style="margin-bottom: 20px;">
+                                <!-- Sisi Kiri: Informasi Garansi -->
+                                <div class="col-8">
+                                    <div class="row mb-2">
+                                        <div class="col-4" style="color: #666;">Nomor Garansi</div>
+                                        <div class="col-8"><strong><span t-out="o.name"/></strong></div>
+                                    </div>
+                                    <div class="row mb-2">
+                                        <div class="col-4" style="color: #666;">Produk</div>
+                                        <div class="col-8"><span t-out="o.product_id.display_name"/></div>
+                                    </div>
+                                    <div class="row mb-2" t-if="o.lot_id">
+                                        <div class="col-4" style="color: #666;">Nomor Seri</div>
+                                        <div class="col-8"><span t-out="o.lot_id.name"/></div>
+                                    </div>
+                                    <div class="row mb-2">
+                                        <div class="col-4" style="color: #666;">Pelanggan</div>
+                                        <div class="col-8"><span t-out="o.partner_id.display_name"/></div>
+                                    </div>
+                                    <div class="row mb-2">
+                                        <div class="col-4" style="color: #666;">Jenis Garansi</div>
+                                        <div class="col-8">
                                             <span t-if="o.warranty_type == 'manufacturer'">Garansi Produsen</span>
                                             <span t-if="o.warranty_type == 'seller'">Garansi Penjual</span>
                                             <span t-if="o.warranty_type == 'extended'">Garansi Tambahan</span>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td style="padding: 4px 0; color: #666;">Tanggal Mulai</td>
-                                        <td style="padding: 4px 0;"><span t-out="o.date_start"/></td>
-                                    </tr>
-                                    <tr>
-                                        <td style="padding: 4px 0; color: #666;">Tanggal Berakhir</td>
-                                        <td style="padding: 4px 0;"><strong t-out="o.date_end"/></td>
-                                    </tr>
-                                    <tr t-if="o.sale_order_id">
-                                        <td style="padding: 4px 0; color: #666;">No. Sales Order</td>
-                                        <td style="padding: 4px 0;"><span t-out="o.sale_order_id.name"/></td>
-                                    </tr>
-                                </table>
-                            </td>
-                            <td style="width: 35%; text-align: center; vertical-align: top;">
-                                <img t-att-src="'/report/barcode/?type=QR&amp;value=%s&amp;width=140&amp;height=140' % (o.name)"
-                                     style="width: 110px; height: 110px;"/>
-                                <div style="font-size: 10px; color: #888; margin-top: 4px;">
-                                    Scan untuk verifikasi
+                                        </div>
+                                    </div>
+                                    <div class="row mb-2">
+                                        <div class="col-4" style="color: #666;">Tanggal Mulai</div>
+                                        <div class="col-8"><span t-out="o.date_start" t-options='{"widget": "date"}'/></div>
+                                    </div>
+                                    <div class="row mb-2">
+                                        <div class="col-4" style="color: #666;">Tanggal Berakhir</div>
+                                        <div class="col-8"><strong><span t-out="o.date_end" t-options='{"widget": "date"}'/></strong></div>
+                                    </div>
+                                    <div class="row mb-2" t-if="o.sale_order_id">
+                                        <div class="col-4" style="color: #666;">No. Sales Order</div>
+                                        <div class="col-8"><span t-out="o.sale_order_id.name"/></div>
+                                    </div>
                                 </div>
-                            </td>
-                        </tr>
-                    </table>
+                                
+                                <!-- Sisi Kanan: Generator QR Code Resmi Odoo -->
+                                <div class="col-4 text-center d-flex flex-column align-items-center justify-content-start">
+                                    <div style="padding: 10px; border: 1px solid #eee; border-radius: 8px; background: #fff;">
+                                        <img t-att-src="'/report/barcode/?barcode_type=QR&amp;value=%s&amp;width=120&amp;height=120' % (o.name)"
+                                             style="width: 120px; height: 120px;" alt="QR Code"/>
+                                    </div>
+                                    <div style="font-size: 11px; color: #888; margin-top: 8px; font-weight: 500;">
+                                        Scan untuk verifikasi
+                                    </div>
+                                </div>
+                            </div>
 
-                    <div style="font-size: 11px; color: #888; border-top: 1px solid #ddd; padding-top: 12px;">
-                        <p style="margin: 2px 0;">
-                            Kartu garansi ini berlaku sebagai bukti pembelian resmi.
-                            Simpan kartu ini untuk keperluan klaim garansi.
-                        </p>
-                        <p style="margin: 2px 0;">
-                            Toko Alat Kesehatan: Pengadegan, Pancoran, Jakarta Selatan
-                        </p>
+                            <!-- Footer Nota -->
+                            <div style="font-size: 11px; color: #888; border-top: 1px solid #e0e0e0; padding-top: 15px; margin-top: 15px; line-height: 1.6;">
+                                <p style="margin: 0;">
+                                    * Kartu garansi ini berlaku sebagai bukti pembelian resmi. Simpan kartu ini untuk keperluan klaim garansi.
+                                </p>
+                                <p style="margin: 0; font-weight: 500; color: #555;">
+                                    Toko Alat Kesehatan: Pengadegan, Pancoran, Jakarta Selatan
+                                </p>
+                            </div>
+
+                        </div>
                     </div>
-
-                </div>
-            </div>
-        </t>
-    </template>
-
-    <template id="report_warranty_card">
-        <t t-call="web.html_container">
-            <t t-call="report_warranty_card_document"/>
+                    
+                </t>
+            </t>
         </t>
     </template>
 
